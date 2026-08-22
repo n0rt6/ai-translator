@@ -1,0 +1,11 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+raycast-env.d.ts
+*.map
+
+# 系统与日志
+.DS_Store
+*.log

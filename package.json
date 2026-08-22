@@ -1,0 +1,112 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "ai-translator",
+  "title": "AI 翻译",
+  "description": "粘贴外语自动识别并翻译成中文，中文自动译成英文。支持接入任意 OpenAI 兼容 API（DeepSeek / 智谱 GLM / Kimi / OpenAI / OpenRouter / Ollama 等）调用指定模型，附本地翻译历史。",
+  "icon": "assets/icon.png",
+  "author": "beimian",
+  "platforms": ["macOS", "Windows"],
+  "categories": ["Productivity", "Web"],
+  "commands": [
+    {
+      "name": "translate",
+      "title": "翻译",
+      "subtitle": "AI 翻译",
+      "description": "粘贴文本自动识别语言并翻译：外语译成中文，中文译成英文。不带参数时可自动翻译剪贴板内容。",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "text",
+          "type": "text",
+          "placeholder": "粘贴或输入要翻译的文本…",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "history",
+      "title": "翻译历史",
+      "subtitle": "AI 翻译",
+      "description": "查看本地保存的翻译历史，支持搜索、复制、删除。",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "apiBaseUrl",
+      "title": "API 服务",
+      "type": "textfield",
+      "required": true,
+      "placeholder": "https://api.deepseek.com/v1",
+      "description": "OpenAI 兼容接口地址，填到含 /v1 的层级（如 https://api.deepseek.com/v1），直接粘贴完整 /chat/completions 端点也可。例：DeepSeek https://api.deepseek.com/v1 · 智谱 https://open.bigmodel.cn/api/paas/v4 · Kimi https://api.moonshot.cn/v1 · OpenAI https://api.openai.com/v1 · Ollama http://localhost:11434/v1"
+    },
+    {
+      "name": "apiKey",
+      "title": "API Key",
+      "type": "password",
+      "required": true,
+      "placeholder": "sk-...",
+      "description": "对应服务的 API 密钥，仅保存在本机。"
+    },
+    {
+      "name": "model",
+      "title": "模型",
+      "type": "textfield",
+      "required": true,
+      "placeholder": "deepseek-chat",
+      "description": "模型名称，如 deepseek-chat、glm-4.7、kimi-k2、gpt-4o-mini 等，以服务商文档为准。"
+    },
+    {
+      "name": "targetLanguage",
+      "title": "翻译行为",
+      "type": "dropdown",
+      "required": false,
+      "default": "简体中文",
+      "description": "目标语言：外语自动译成所选语言；若输入本身就是该语言，则译成英文（或中文）实现互译。",
+      "data": [
+        { "title": "外语 → 简体中文（中文 → English）", "value": "简体中文" },
+        { "title": "外语 → 繁體中文（繁中 → English）", "value": "繁體中文" },
+        { "title": "外语 → English（English → 简体中文）", "value": "English" },
+        { "title": "外语 → 日本語（日本語 → 简体中文）", "value": "日本語" }
+      ]
+    },
+    {
+      "name": "autoClipboard",
+      "type": "checkbox",
+      "label": "不带参数时自动翻译剪贴板内容",
+      "required": false,
+      "default": true,
+      "description": "呼出「翻译」命令直接回车时，自动读取剪贴板中的文本并翻译。"
+    },
+    {
+      "name": "saveHistory",
+      "type": "checkbox",
+      "label": "保存翻译历史到本地",
+      "required": false,
+      "default": true,
+      "description": "在「翻译历史」命令中查看。历史仅保存在本机 Raycast LocalStorage，不上传。"
+    },
+    {
+      "name": "temperature",
+      "title": "高级",
+      "type": "textfield",
+      "required": false,
+      "default": "0.1",
+      "placeholder": "0.1",
+      "description": "采样温度，翻译建议保持较低值（0 ~ 2）。"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^2.0.5",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.17",
+    "@types/react": "^19.0.10",
+    "typescript": "^5.6.0"
+  },
+  "scripts": {
+    "dev": "ray develop",
+    "build": "ray build"
+  }
+}
