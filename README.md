@@ -1,47 +1,93 @@
-# AI 翻译 (Raycast 扩展)
+<div align="center">
 
-粘贴外语自动识别并翻译成中文，中文自动译成英文（中英互译，目标语言可配置）。
-通过 OpenAI 兼容 API 调用任意指定模型，附本地翻译历史。
+# AI Translator for Raycast
 
-> 开源协议：[MIT](./LICENSE)。欢迎使用、修改与分发。
+**Paste any text. Get a fluent translation — in the language and model you choose.**
 
-## 使用
+</div>
 
-1. **粘贴翻译**：呼出 Raycast（默认 `⌥ Space`）→ 输入 `翻译` → 按空格 → 粘贴文本 → 回车
-2. **剪贴板翻译**：输入 `翻译` 直接回车，自动翻译剪贴板中的文本
-3. **翻译历史**：输入 `翻译历史` 回车，可搜索 / 复制 / 删除
+An [open-source](https://github.com/n0rt6/ai-translator) Raycast extension that detects the language of your input and translates it automatically: foreign text becomes Chinese, Chinese becomes English. It works with **any OpenAI-compatible API**, so the model is entirely your choice — DeepSeek, Zhipu GLM, Kimi, OpenAI, OpenRouter, a local Ollama instance, or any other model you can reach through a compatible endpoint.
 
-## 配置（首次使用必填）
+> **[简体中文](docs/README_ZH.md)** · MIT License
 
-Raycast 设置 → 扩展 → AI 翻译：
+---
 
-| 配置项 | 填写内容 |
-|--------|----------|
-| API 服务 | OpenAI 兼容接口地址（含 `/v1` 层级） |
-| API Key | 对应服务的密钥 |
-| 模型 | 模型名称，以服务商文档为准 |
+## ✨ Features
 
-### 常见服务商填法
+- [x] **Auto language detection** — no need to pick source/target languages; foreign text is translated to Chinese, Chinese to English (target language configurable)
+- [x] **Bring your own model** — plug in any OpenAI-compatible endpoint and use the model you prefer, from `deepseek-chat` to `gpt-4o-mini` to local `qwen3`
+- [x] **Clipboard-first workflow** — invoke the command and press Enter; the clipboard content is translated instantly
+- [x] **Local translation history** — the latest 100 entries, searchable, stored only on your machine
+- [x] **Thinking-model friendly** — reasoning blocks (`<think>…</think>`) are stripped automatically for models like MiniMax
+- [x] **Endpoint lenient** — accept both the `/v1` base URL and the full `/chat/completions` endpoint
+- [x] **Private by design** — API key lives in Raycast's local preferences; no ads, no telemetry, no cloud
 
-| 服务商 | API 服务 | 模型示例 |
-|--------|----------|----------|
-| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
-| 智谱 GLM | `https://open.bigmodel.cn/api/paas/v4` | `glm-4.7` |
-| Kimi (月之暗面) | `https://api.moonshot.cn/v1` | `kimi-k2` |
-| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
-| OpenRouter | `https://openrouter.ai/api/v1` | `openai/gpt-4o-mini` |
-| Ollama (本地) | `http://localhost:11434/v1` | `qwen3` 等 |
+## How it differs
 
-Ollama 本地部署可零成本测试（API Key 随便填一个非空值即可）。
+Many translation extensions ship with a fixed set of providers. This one treats translation as a model problem: if you can talk to an OpenAI-compatible API, you can translate with it — including fully offline models via [Ollama](https://ollama.com).
 
-## 开发
+| | AI Translator | Typical alternatives |
+|---|---|---|
+| Provider | Any OpenAI-compatible API | Fixed providers |
+| Model choice | Yours (change anytime) | Usually fixed per service |
+| Local / offline | ✅ via Ollama | Rarely |
+| Translation history | ✅ built-in, local | Often absent or cloud-based |
+| API key storage | Raycast local preferences only | Varies |
+| Endpoint format | `/v1` or full endpoint accepted | Base URL only |
+| Language direction | Auto-detect, bi-directional | Usually fixed source → target |
+
+## Installation
+
+The extension is in active development. To install locally:
 
 ```bash
+git clone https://github.com/n0rt6/ai-translator.git
+cd ai-translator
 npm install
-npm run dev      # 热更新开发模式，扩展出现在 Raycast 根搜索
-npx tsc --noEmit # 类型检查
-npm run build    # 构建产物
-node scripts/gen-icon.mjs  # 重新生成图标
+npm run dev
 ```
 
-修改代码保存后，在 Raycast 中重新打开命令即可看到变化。
+The extension then appears in Raycast's root search. (`ray develop` keeps it hot-reloaded; stop it with `Ctrl+C` — the extension stays available.)
+
+## Configuration
+
+Open **Raycast Settings → Extensions → AI Translator** and fill in the three required fields:
+
+| Setting | Description |
+|---|---|
+| **API Service** | OpenAI-compatible base URL, e.g. `https://api.deepseek.com/v1`. The full `/chat/completions` endpoint also works. |
+| **API Key** | Your key for that service (stored locally, never transmitted anywhere else). |
+| **Model** | Model name, e.g. `deepseek-chat`. |
+
+### Provider examples
+
+| Provider | Base URL | Model example |
+|---|---|---|
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
+| Zhipu GLM | `https://open.bigmodel.cn/api/paas/v4` | `glm-4.7` |
+| Kimi (Moonshot) | `https://api.moonshot.cn/v1` | `kimi-k2` |
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| OpenRouter | `https://openrouter.ai/api/v1` | `openai/gpt-4o-mini` |
+| Ollama (local) | `http://localhost:11434/v1` | `qwen3` |
+
+You'll need your own API key; most providers offer a free tier to start with. Ollama is a zero-cost option for fully local translation (any non-empty API key works).
+
+## Usage
+
+1. **Paste to translate** — open Raycast (`⌥ Space` by default), type `翻译` (or `Translate`), paste your text, press Enter
+2. **Clipboard translate** — open the command and press Enter directly; the clipboard content is translated
+3. **History** — open `翻译历史` (or `History`) to search, copy, or delete past translations
+
+## Privacy
+
+- The API key is stored only in Raycast's local preferences
+- Translation requests go directly from your Mac to the API endpoint you configured — nothing passes through a third-party server
+- History is kept in Raycast's local storage; disable "Save translation history" in settings to stop recording entirely
+
+## Acknowledgements
+
+Built with the [Raycast API](https://developers.raycast.com). Inspired by the great translation extensions in the [raycast/extensions](https://github.com/raycast/extensions) community.
+
+## License
+
+[MIT](./LICENSE) © n0rt6
