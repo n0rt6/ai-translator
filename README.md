@@ -6,7 +6,7 @@
 
 </div>
 
-An [open-source](https://github.com/n0rt6/ai-translator) Raycast extension that detects the language of your input and translates it automatically: foreign text becomes Chinese, Chinese becomes English. It works with **any OpenAI-compatible API**, so the model is entirely your choice — DeepSeek, Zhipu GLM, Kimi, OpenAI, OpenRouter, a local Ollama instance, or any other model you can reach through a compatible endpoint.
+An [open-source](https://github.com/n0rt6/ai-translator) Raycast extension that detects the language of your input and translates it into your **preferred language** — with 30 common languages supported and the ability to switch the target language after translation. It works with **any OpenAI-compatible API**, so the model is entirely your choice — DeepSeek, Zhipu GLM, Kimi, OpenAI, OpenRouter, a local Ollama instance, or any other model you can reach through a compatible endpoint.
 
 > **[简体中文](docs/README_ZH.md)** · MIT License
 
@@ -14,7 +14,10 @@ An [open-source](https://github.com/n0rt6/ai-translator) Raycast extension that 
 
 ## ✨ Features
 
-- [x] **Auto language detection** — no need to pick source/target languages; foreign text is translated to Chinese, Chinese to English (target language configurable)
+- [x] **Auto language detection** — no need to pick source/target languages; input is detected and translated into your preferred language
+- [x] **30 common languages** — Simplified/Traditional Chinese, English, Japanese, Korean, French, German, Spanish, Portuguese, Russian, Italian, Arabic, Thai, Vietnamese, Indonesian, Turkish, Dutch, Polish, Ukrainian, Greek, Hebrew, Hindi, Malay, Czech, Swedish, Norwegian, Danish, Finnish, Hungarian, Romanian
+- [x] **Preferred target language** — set it once in settings; if the input is already in your preferred language, it is translated to English automatically
+- [x] **Switch target language anytime** — after translation, press `⌘L` (or use the action menu) to retranslate into another language, keeping the detected source language
 - [x] **Bring your own model** — plug in any OpenAI-compatible endpoint and use the model you prefer, from `deepseek-chat` to `gpt-4o-mini` to local `qwen3`
 - [x] **Clipboard-first workflow** — invoke the command and press Enter; the clipboard content is translated instantly
 - [x] **Local translation history** — the latest 100 entries, searchable, stored only on your machine
@@ -30,6 +33,8 @@ Many translation extensions ship with a fixed set of providers. This one treats 
 |---|---|---|
 | Provider | Any OpenAI-compatible API | Fixed providers |
 | Model choice | Yours (change anytime) | Usually fixed per service |
+| Languages | 30 common languages | Varies |
+| Target language | Preferred + switchable anytime | Usually fixed |
 | Local / offline | ✅ via Ollama | Rarely |
 | Translation history | ✅ built-in, local | Often absent or cloud-based |
 | API key storage | Raycast local preferences only | Varies |
@@ -58,6 +63,7 @@ Open **Raycast Settings → Extensions → AI Translator** and fill in the three
 | **API Service** | OpenAI-compatible base URL, e.g. `https://api.deepseek.com/v1`. The full `/chat/completions` endpoint also works. |
 | **API Key** | Your key for that service (stored locally, never transmitted anywhere else). |
 | **Model** | Model name, e.g. `deepseek-chat`. |
+| **Preferred language** | The language input is translated into (default: Simplified Chinese). If the input is already in this language, it is translated to English. |
 
 ### Provider examples
 
@@ -76,7 +82,8 @@ You'll need your own API key; most providers offer a free tier to start with. Ol
 
 1. **Paste to translate** — open Raycast (`⌥ Space` by default), type `翻译` (or `Translate`), paste your text, press Enter
 2. **Clipboard translate** — open the command and press Enter directly; the clipboard content is translated
-3. **History** — open `翻译历史` (or `History`) to search, copy, or delete past translations
+3. **Switch target language** — after translation, press `⌘L` (or the "Switch target language…" action), pick a language; the text is retranslated into that language
+4. **History** — open `翻译历史` (or `History`) to search, copy, or delete past translations
 
 ## Privacy
 

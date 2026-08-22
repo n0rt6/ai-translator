@@ -5,6 +5,8 @@ export interface HistoryEntry {
   source: string;
   result: string;
   createdAt: number;
+  /** 目标语言(英文名);旧记录可能没有此字段 */
+  targetLang?: string;
 }
 
 const STORAGE_KEY = "translation_history";
@@ -26,14 +28,14 @@ async function save(list: HistoryEntry[]): Promise<void> {
 }
 
 /** 新增一条历史；若与最近一条原文相同则替换，避免重复堆积 */
-export async function addHistory(source: string, result: string): Promise<void> {
+export async function addHistory(source: string, result: string, targetLang?: string): Promise<void> {
   const list = await loadHistory();
   if (list.length > 0 && list[0].source === source) {
-    list[0] = { id: list[0].id, source, result, createdAt: Date.now() };
+    list[0] = { id: list[0].id, source, result, createdAt: Date.now(), targetLang };
   } else {
     // Raycast 运行时无全局 crypto，用时间戳+随机数生成 ID
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-    list.unshift({ id, source, result, createdAt: Date.now() });
+    list.unshift({ id, source, result, createdAt: Date.now(), targetLang });
   }
   await save(list);
 }
