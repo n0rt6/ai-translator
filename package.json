@@ -3,8 +3,9 @@
   "name": "ai-translator",
   "title": "AI 翻译",
   "description": "自动识别输入语言并翻译为你的首选语言（支持 30 种常用语言），翻译完成后可随时切换译文语言。支持接入任意 OpenAI 兼容 API 调用指定模型，附本地翻译历史。",
-  "icon": "assets/icon.png",
+  "icon": "icon.png",
   "author": "beimian",
+  "license": "MIT",
   "platforms": ["macOS", "Windows"],
   "categories": ["Productivity", "Web"],
   "commands": [
@@ -123,7 +124,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^2.0.5",
+    "@raycast/api": "^2.4.1",
     "react": "^19.0.0"
   },
   "devDependencies": {
