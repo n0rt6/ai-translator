@@ -6,8 +6,14 @@
   "icon": "icon.png",
   "author": "beimian",
   "license": "MIT",
-  "platforms": ["macOS", "Windows"],
-  "categories": ["Productivity", "Web"],
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "categories": [
+    "Productivity",
+    "Web"
+  ],
   "commands": [
     {
       "name": "translate",
@@ -58,6 +64,15 @@
       "description": "模型名称，如 deepseek-chat、glm-4.7、kimi-k2、gpt-4o-mini 等，以服务商文档为准。"
     },
     {
+      "name": "proxyUrl",
+      "title": "HTTP 代理",
+      "type": "textfield",
+      "required": false,
+      "default": "",
+      "placeholder": "http://127.0.0.1:7897",
+      "description": "可选。Raycast 扩展的网络请求不走系统代理，当 API 服务无法直连（如境外服务被墙）导致「fetch failed」时填写本机代理地址，如 Clash Verge http://127.0.0.1:7897、ClashX http://127.0.0.1:7890。留空则直连。"
+    },
+    {
       "name": "targetLanguage",
       "title": "首选翻译语言",
       "type": "dropdown",
@@ -65,36 +80,126 @@
       "default": "Chinese (Simplified)",
       "description": "首选翻译语言：输入自动识别语言后翻译为所选语言；若输入本身就是该语言，则自动翻译为英文。",
       "data": [
-        { "title": "简体中文", "value": "Chinese (Simplified)" },
-        { "title": "繁體中文", "value": "Chinese (Traditional)" },
-        { "title": "English", "value": "English" },
-        { "title": "日本語", "value": "Japanese" },
-        { "title": "한국어", "value": "Korean" },
-        { "title": "Français", "value": "French" },
-        { "title": "Deutsch", "value": "German" },
-        { "title": "Español", "value": "Spanish" },
-        { "title": "Português", "value": "Portuguese" },
-        { "title": "Русский", "value": "Russian" },
-        { "title": "Italiano", "value": "Italian" },
-        { "title": "العربية", "value": "Arabic" },
-        { "title": "ไทย", "value": "Thai" },
-        { "title": "Tiếng Việt", "value": "Vietnamese" },
-        { "title": "Bahasa Indonesia", "value": "Indonesian" },
-        { "title": "Türkçe", "value": "Turkish" },
-        { "title": "Nederlands", "value": "Dutch" },
-        { "title": "Polski", "value": "Polish" },
-        { "title": "Українська", "value": "Ukrainian" },
-        { "title": "Ελληνικά", "value": "Greek" },
-        { "title": "עברית", "value": "Hebrew" },
-        { "title": "हिन्दी", "value": "Hindi" },
-        { "title": "Bahasa Melayu", "value": "Malay" },
-        { "title": "Čeština", "value": "Czech" },
-        { "title": "Svenska", "value": "Swedish" },
-        { "title": "Norsk", "value": "Norwegian" },
-        { "title": "Dansk", "value": "Danish" },
-        { "title": "Suomi", "value": "Finnish" },
-        { "title": "Magyar", "value": "Hungarian" },
-        { "title": "Română", "value": "Romanian" }
+        {
+          "title": "简体中文",
+          "value": "Chinese (Simplified)"
+        },
+        {
+          "title": "繁體中文",
+          "value": "Chinese (Traditional)"
+        },
+        {
+          "title": "English",
+          "value": "English"
+        },
+        {
+          "title": "日本語",
+          "value": "Japanese"
+        },
+        {
+          "title": "한국어",
+          "value": "Korean"
+        },
+        {
+          "title": "Français",
+          "value": "French"
+        },
+        {
+          "title": "Deutsch",
+          "value": "German"
+        },
+        {
+          "title": "Español",
+          "value": "Spanish"
+        },
+        {
+          "title": "Português",
+          "value": "Portuguese"
+        },
+        {
+          "title": "Русский",
+          "value": "Russian"
+        },
+        {
+          "title": "Italiano",
+          "value": "Italian"
+        },
+        {
+          "title": "العربية",
+          "value": "Arabic"
+        },
+        {
+          "title": "ไทย",
+          "value": "Thai"
+        },
+        {
+          "title": "Tiếng Việt",
+          "value": "Vietnamese"
+        },
+        {
+          "title": "Bahasa Indonesia",
+          "value": "Indonesian"
+        },
+        {
+          "title": "Türkçe",
+          "value": "Turkish"
+        },
+        {
+          "title": "Nederlands",
+          "value": "Dutch"
+        },
+        {
+          "title": "Polski",
+          "value": "Polish"
+        },
+        {
+          "title": "Українська",
+          "value": "Ukrainian"
+        },
+        {
+          "title": "Ελληνικά",
+          "value": "Greek"
+        },
+        {
+          "title": "עברית",
+          "value": "Hebrew"
+        },
+        {
+          "title": "हिन्दी",
+          "value": "Hindi"
+        },
+        {
+          "title": "Bahasa Melayu",
+          "value": "Malay"
+        },
+        {
+          "title": "Čeština",
+          "value": "Czech"
+        },
+        {
+          "title": "Svenska",
+          "value": "Swedish"
+        },
+        {
+          "title": "Norsk",
+          "value": "Norwegian"
+        },
+        {
+          "title": "Dansk",
+          "value": "Danish"
+        },
+        {
+          "title": "Suomi",
+          "value": "Finnish"
+        },
+        {
+          "title": "Magyar",
+          "value": "Hungarian"
+        },
+        {
+          "title": "Română",
+          "value": "Romanian"
+        }
       ]
     },
     {
@@ -125,7 +230,8 @@
   ],
   "dependencies": {
     "@raycast/api": "^2.4.1",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "undici": "^7.30.0"
   },
   "devDependencies": {
     "@types/node": "^22.19.17",

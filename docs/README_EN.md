@@ -63,6 +63,7 @@ Open **Raycast Settings → Extensions → AI Translator** and fill in the three
 | **API Service** | OpenAI-compatible base URL, e.g. `https://api.deepseek.com/v1`. The full `/chat/completions` endpoint also works. |
 | **API Key** | Your key for that service (stored locally, never transmitted anywhere else). |
 | **Model** | Model name, e.g. `deepseek-chat`. |
+| **HTTP Proxy** (optional) | Local proxy URL, e.g. Clash Verge's `http://127.0.0.1:7897`. Leave empty for direct connection. Required when the API is unreachable directly (e.g. blocked foreign services) — extension requests **do not use the system proxy**. |
 | **Preferred language** | The language input is translated into (default: Simplified Chinese). If the input is already in this language, it is returned as-is with a "no translation needed" notice. |
 
 ### Provider examples
@@ -77,6 +78,16 @@ Open **Raycast Settings → Extensions → AI Translator** and fill in the three
 | Ollama (local) | `http://localhost:11434/v1` | `qwen3` |
 
 You'll need your own API key; most providers offer a free tier to start with. Ollama is a zero-cost option for fully local translation (any non-empty API key works).
+
+## Troubleshooting
+
+| Error | Cause & fix |
+|---|---|
+| Cannot connect to API service: fetch failed (ETIMEDOUT) | The API endpoint is unreachable directly (a blocked foreign service is the most common cause). Extension requests **do not use the system proxy** — set the "HTTP Proxy" preference, switch to a domestically reachable provider, or enable TUN mode in your proxy app |
+| Cannot connect to API service: fetch failed (ECONNREFUSED) | Nothing is listening on the target. For local Ollama, make sure it is running; if you use a proxy, double-check the port |
+| Request timeout (30 s) | Slow network or a dead proxy node — try another node |
+| Invalid or unauthorized API key (401/403) | Wrong key or out of balance |
+| Endpoint not found (404) | The API URL must include the `/v1` level |
 
 ## Usage
 

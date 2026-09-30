@@ -1,10 +1,12 @@
 import { getPreferenceValues } from "@raycast/api";
+import { fetch as proxyFetch, ProxyAgent } from "undici";
 import { DEFAULT_TARGET_LANGUAGE } from "./languages";
 
 export interface TranslatorPreferences {
   apiBaseUrl: string;
   apiKey: string;
   model: string;
+  proxyUrl: string;
   targetLanguage: string;
   autoClipboard: boolean;
   saveHistory: boolean;
@@ -91,6 +93,27 @@ function parseTemperature(raw: string): number {
   return Math.min(Math.max(t, 0), 2);
 }
 
+/** 按代理地址缓存 ProxyAgent,避免每次请求都重建连接池 */
+let proxyAgentCache: { key: string; agent: ProxyAgent } | undefined;
+
+function getProxyAgent(proxyUrl: string): ProxyAgent {
+  if (!proxyAgentCache || proxyAgentCache.key !== proxyUrl) {
+    proxyAgentCache = { key: proxyUrl, agent: new ProxyAgent(proxyUrl) };
+  }
+  return proxyAgentCache.agent;
+}
+
+/** 透出 undici「fetch failed」背后的底层原因(如 ECONNREFUSED、ETIMEDOUT),便于排查 */
+function describeFetchError(err: unknown): string {
+  if (!(err instanceof Error)) return String(err);
+  const cause = (err as { cause?: unknown }).cause;
+  if (cause instanceof Error) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    return code ? `${err.message}（${code}）` : cause.message;
+  }
+  return err.message;
+}
+
 /** 清理模型输出:剥离思考模型可能混入 content 的 <think>…</think> 推理块,以及首尾空白 */
 function cleanOutput(raw: string): string {
   let out = raw.trim();
@@ -121,7 +144,7 @@ export async function translate(text: string, options: TranslateOptions = {}): P
 
   let res: Response;
   try {
-    res = await fetch(url, {
+    const requestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -136,13 +159,25 @@ export async function translate(text: string, options: TranslateOptions = {}): P
         temperature: parseTemperature(prefs.temperature),
       }),
       signal: AbortSignal.timeout(30_000),
-    });
+    };
+
+    const proxyUrl = prefs.proxyUrl?.trim();
+    if (proxyUrl) {
+      // Raycast 内置 fetch 不支持任何代理(系统代理与环境变量均无效),无法直连的 API 会直接 fetch failed;
+      // 配置了代理时改用 undici 的 fetch + ProxyAgent 显式走代理
+      res = (await proxyFetch(url, {
+        ...requestInit,
+        dispatcher: getProxyAgent(proxyUrl),
+      })) as unknown as Response;
+    } else {
+      res = await fetch(url, requestInit);
+    }
   } catch (err) {
     if (err instanceof Error && err.name === "TimeoutError") {
       throw new TranslateError("请求超时（30 秒）：请检查网络或接口地址是否正确。");
     }
     throw new TranslateError(
-      `无法连接到 API 服务：${err instanceof Error ? err.message : String(err)}。请检查 API 服务地址是否正确、网络是否可用。`
+      `无法连接到 API 服务：${describeFetchError(err)}。请检查 API 服务地址是否正确、网络是否可用；若 API 无法直连（如境外服务），请在扩展设置中填写 HTTP 代理。`
     );
   }
 
